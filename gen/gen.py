@@ -345,13 +345,26 @@ class Platform:
         return [f for f in flags if not f.startswith('-L') and f not in ('-lpgport', '-lpgcommon')]
 
 
+# What src/interfaces/libpq/pthread-win32.c defines.
+WIN32_PTHREAD = [
+    'pthread_self', 'pthread_setspecific', 'pthread_getspecific',
+    'pthread_mutex_init', 'pthread_mutex_lock', 'pthread_mutex_unlock',
+]
+
+
 def extra_cflags(platform):
     """Flags of our own, recorded in the manifest like meson's."""
     if platform.os == 'windows':
         # On MinGW-w64, c.h maps sigsetjmp to __builtin_setjmp, whose
         # parameter clang declares as void **; GCC accepts the sigjmp_buf
         # it is given.
-        return ['-Wno-incompatible-pointer-types']
+        flags = ['-Wno-incompatible-pointer-types']
+        # libpq brings its own pthread functions on Windows, which libpq.dll
+        # keeps private. Linked statically, they would collide with
+        # winpthreads', which any program using threads (such as OCaml's
+        # runtime) has: rename them.
+        flags += [f'-D{f}=pq_{f}' for f in WIN32_PTHREAD]
+        return flags
     if platform.arch == 'powerpc64le' and platform.abi == 'gnu':
         # Match zig-openssl: the IBM long double ABI, which glibc < 2.32
         # supports.
