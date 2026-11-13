@@ -1,0 +1,17 @@
+.{
+    .name = .zig_libpq,
+    .version = "0.0.1",
+    .dependencies = .{
+        .postgresql = .{
+            .url = "https://ftp.postgresql.org/pub/source/v18.7/postgresql-18.7.tar.gz",
+            .hash = "N-V-__8AAC_rpwiANj-Z-IuHlGBqDBD62VyKxXXurwGOSXO8",
+        },
+        .openssl = .{
+            .url = "https://github.com/shreyassanthu77/zig-openssl/archive/bf9d1cd90100efef0f790b4a5292c6a6a1707697.tar.gz",
+            .hash = "zig_openssl-0.0.1-VtcnsBsbhQPvKgBqQH2_iZaTpTMgmAW4tthEB2g9Y60d",
+        },
+    },
+    .minimum_zig_version = "0.17.0",
+    .paths = .{""},
+    .fingerprint = 0xa66b2beb38d0f0ec,
+}
